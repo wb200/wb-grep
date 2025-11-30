@@ -1,6 +1,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as lancedb from "@lancedb/lancedb";
+import { VECTOR_DIMENSIONS } from "./constants";
 
 export interface ChunkRecord {
   id: string;
@@ -13,6 +14,10 @@ export interface ChunkRecord {
   timestamp: number;
 }
 
+interface LanceDBRow extends ChunkRecord {
+  _distance?: number;
+}
+
 export interface SearchResult {
   id: string;
   filepath: string;
@@ -22,7 +27,6 @@ export interface SearchResult {
   score: number;
 }
 
-const VECTOR_DIMENSIONS = 1024;
 const TABLE_NAME = "code_chunks";
 
 export class LanceDBStore {
@@ -117,9 +121,9 @@ export class LanceDBStore {
       query = query.where(`filepath LIKE '${escapedPath}%'`);
     }
 
-    const results = await query.toArray();
+    const results = (await query.toArray()) as LanceDBRow[];
 
-    return results.map((row: any) => ({
+    return results.map((row) => ({
       id: row.id,
       filepath: row.filepath,
       content: row.content,
@@ -150,13 +154,14 @@ export class LanceDBStore {
   }> {
     if (!this.table) return { totalChunks: 0, uniqueFiles: 0 };
 
-    const allRows = await this.table.query().toArray();
-    const uniqueFiles = new Set(allRows.map((r: any) => r.filepath)).size;
+    const totalChunks = await this.table.countRows();
+    const filepathRows = (await this.table
+      .query()
+      .select(["filepath"])
+      .toArray()) as Array<{ filepath: string }>;
+    const uniqueFiles = new Set(filepathRows.map((r) => r.filepath)).size;
 
-    return {
-      totalChunks: allRows.length,
-      uniqueFiles,
-    };
+    return { totalChunks, uniqueFiles };
   }
 
   async clear(): Promise<void> {

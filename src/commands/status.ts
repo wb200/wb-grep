@@ -4,6 +4,7 @@ import chalk from "chalk";
 import { Command } from "commander";
 import ora from "ora";
 import { loadConfig } from "../lib/config";
+import { VERBOSE_FILE_LIMIT } from "../lib/constants";
 import { Indexer } from "../lib/indexer";
 
 export async function performStatus(options: {
@@ -85,7 +86,7 @@ export async function performStatus(options: {
 
       if (files.length > 0) {
         console.log(chalk.white("\nIndexed Files:"));
-        const displayFiles = files.slice(0, 20);
+        const displayFiles = files.slice(0, VERBOSE_FILE_LIMIT);
         for (const file of displayFiles) {
           const relativePath = path.relative(root, file);
           const metadata = stateManager.getFile(file);
@@ -95,8 +96,12 @@ export async function performStatus(options: {
             ),
           );
         }
-        if (files.length > 20) {
-          console.log(chalk.gray(`  ... and ${files.length - 20} more files`));
+        if (files.length > VERBOSE_FILE_LIMIT) {
+          console.log(
+            chalk.gray(
+              `  ... and ${files.length - VERBOSE_FILE_LIMIT} more files`,
+            ),
+          );
         }
       }
     }

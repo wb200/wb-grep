@@ -54,13 +54,9 @@ export async function performIndex(options: {
 
   const progressSpinner = ora(`Indexing 0/${files.length} files...`).start();
 
-  // biome-ignore lint/complexity/useLiteralKeys: accessing private property for progress
-  const originalOnProgress = indexer["onProgress"];
-  // biome-ignore lint/complexity/useLiteralKeys: accessing private property for progress
-  indexer["onProgress"] = (current, total, _file) => {
+  indexer.setProgressCallback((current, total) => {
     progressSpinner.text = `Indexing ${current}/${total} files...`;
-    originalOnProgress?.(current, total, _file);
-  };
+  });
 
   const stats = await indexer.indexAll({ clear: options.clear });
 

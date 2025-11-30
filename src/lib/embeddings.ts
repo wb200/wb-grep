@@ -1,3 +1,12 @@
+import {
+  DEFAULT_OLLAMA_MODEL,
+  DEFAULT_OLLAMA_RETRIES,
+  DEFAULT_OLLAMA_TIMEOUT,
+  DEFAULT_OLLAMA_URL,
+  MAX_RETRY_DELAY_MS,
+  VECTOR_DIMENSIONS,
+} from "./constants";
+
 export interface EmbeddingConfig {
   model: string;
   baseURL: string;
@@ -26,11 +35,11 @@ export class RetryError extends Error {
 }
 
 const DEFAULT_CONFIG: EmbeddingConfig = {
-  model: "qwen3-embedding:0.6b",
-  baseURL: "http://localhost:11434",
-  dimensions: 1024,
-  timeout: 30000,
-  retries: 3,
+  model: DEFAULT_OLLAMA_MODEL,
+  baseURL: DEFAULT_OLLAMA_URL,
+  dimensions: VECTOR_DIMENSIONS,
+  timeout: DEFAULT_OLLAMA_TIMEOUT,
+  retries: DEFAULT_OLLAMA_RETRIES,
 };
 
 async function sleep(ms: number): Promise<void> {
@@ -83,7 +92,7 @@ export class OllamaEmbedder {
           lastError.message.includes("fetch failed");
 
         if (attempt < this.config.retries && (isAbortError || isNetworkError)) {
-          const delay = Math.min(1000 * 2 ** (attempt - 1), 10000);
+          const delay = Math.min(1000 * 2 ** (attempt - 1), MAX_RETRY_DELAY_MS);
           await sleep(delay);
           continue;
         }

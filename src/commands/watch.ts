@@ -5,6 +5,7 @@ import chokidar from "chokidar";
 import { Command } from "commander";
 import ora from "ora";
 import { loadConfig } from "../lib/config";
+import { WATCH_DEBOUNCE_MS } from "../lib/constants";
 import { Indexer } from "../lib/indexer";
 
 export async function startWatch(options: { dryRun: boolean }): Promise<void> {
@@ -116,7 +117,7 @@ export async function startWatch(options: { dryRun: boolean }): Promise<void> {
   const scheduleUpdate = (filepath: string) => {
     pendingChanges.add(filepath);
     if (debounceTimer) clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(processPendingChanges, 500);
+    debounceTimer = setTimeout(processPendingChanges, WATCH_DEBOUNCE_MS);
   };
 
   watcher.on("add", scheduleUpdate);

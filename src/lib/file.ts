@@ -92,7 +92,7 @@ export interface FileSystemOptions {
 
 export class FileSystem {
   private customIgnore: Ignore;
-  private ignoreCache = new Map<string, Ignore>();
+  private ignoreCache = new Map<string, Ignore | null>();
 
   constructor(options: FileSystemOptions = {}) {
     this.customIgnore = ignore();
@@ -212,11 +212,7 @@ export class FileSystem {
       return ig;
     }
 
-    this.ignoreCache.set(dir, null as any);
+    this.ignoreCache.set(dir, null);
     return null;
-  }
-
-  loadWbgrepignore(dirRoot: string): void {
-    this.getDirectoryIgnore(dirRoot);
   }
 }

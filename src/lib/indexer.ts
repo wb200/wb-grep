@@ -3,10 +3,12 @@ import * as path from "node:path";
 import { v4 as uuidv4 } from "uuid";
 import { CodeChunker } from "./chunker";
 import type { WbGrepConfig } from "./config";
+import { BINARY_SAMPLE_SIZE, MAX_FILE_SIZE } from "./constants";
 import { OllamaEmbedder } from "./embeddings";
 import { FileSystem } from "./file";
 import { IndexStateManager } from "./index-state";
 import { type Logger, createLogger } from "./logger";
+import type { SearchResult } from "./vector-store";
 import { LanceDBStore } from "./vector-store";
 
 export interface IndexResult {
@@ -22,14 +24,17 @@ export interface IndexStats {
   totalChunks: number;
 }
 
+export interface SearchOptions {
+  limit?: number;
+  pathFilter?: string;
+}
+
 export interface IndexerOptions {
   config: WbGrepConfig;
   root: string;
   logger?: Logger;
   onProgress?: (current: number, total: number, file: string) => void;
 }
-
-const MAX_FILE_SIZE = 1024 * 1024; // 1MB default
 
 export class Indexer {
   private embedder: OllamaEmbedder;
@@ -232,6 +237,21 @@ export class Indexer {
     await this.stateManager.save();
   }
 
+  async search(
+    query: string,
+    options: SearchOptions = {},
+  ): Promise<SearchResult[]> {
+    const limit = options.limit ?? this.config.search.maxResults;
+    const queryVector = await this.embedder.embed(query);
+    return this.vectorStore.search(queryVector, limit, options.pathFilter);
+  }
+
+  setProgressCallback(
+    callback: (current: number, total: number, file: string) => void,
+  ): void {
+    this.onProgress = callback;
+  }
+
   getFileSystem(): FileSystem {
     return this.fileSystem;
   }
@@ -240,16 +260,8 @@ export class Indexer {
     return this.stateManager;
   }
 
-  getVectorStore(): LanceDBStore {
-    return this.vectorStore;
-  }
-
-  getEmbedder(): OllamaEmbedder {
-    return this.embedder;
-  }
-
   private isBinaryContent(content: string): boolean {
-    const sampleSize = Math.min(content.length, 8000);
+    const sampleSize = Math.min(content.length, BINARY_SAMPLE_SIZE);
     const sample = content.slice(0, sampleSize);
     let nullCount = 0;
 

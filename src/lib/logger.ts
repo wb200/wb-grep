@@ -74,15 +74,6 @@ export class Logger {
   }
 }
 
-let defaultLogger: Logger | null = null;
-
-export function getLogger(options?: LoggerOptions): Logger {
-  if (!defaultLogger) {
-    defaultLogger = new Logger(options);
-  }
-  return defaultLogger;
-}
-
 export function createLogger(options?: LoggerOptions): Logger {
   return new Logger(options);
 }

@@ -26,10 +26,7 @@
     "qwen3",
     "code-search"
   ],
-  "files": [
-    "dist",
-    "README.md"
-  ],
+  "files": ["dist", "README.md"],
   "engines": {
     "node": ">=18.0.0"
   },
@@ -40,9 +37,7 @@
     "chokidar": "^3.6.0",
     "commander": "^12.1.0",
     "ignore": "^5.3.2",
-    "istextorbinary": "^9.5.0",
     "ora": "^8.1.1",
-    "p-limit": "^6.1.0",
     "uuid": "^10.0.0"
   },
   "devDependencies": {

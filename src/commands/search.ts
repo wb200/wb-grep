@@ -3,6 +3,7 @@ import chalk from "chalk";
 import { Command } from "commander";
 import ora from "ora";
 import { loadConfig } from "../lib/config";
+import { PREVIEW_LINE_LIMIT } from "../lib/constants";
 import { Indexer } from "../lib/indexer";
 import type { SearchResult } from "../lib/vector-store";
 
@@ -22,9 +23,11 @@ function formatResult(
 
   if (showContent) {
     const lines = result.content.split("\n");
-    const preview = lines.slice(0, 10).join("\n");
+    const preview = lines.slice(0, PREVIEW_LINE_LIMIT).join("\n");
     const truncated =
-      lines.length > 10 ? chalk.gray("\n  ... (truncated)") : "";
+      lines.length > PREVIEW_LINE_LIMIT
+        ? chalk.gray("\n  ... (truncated)")
+        : "";
     output += `\n${chalk.gray(
       preview
         .split("\n")
@@ -74,10 +77,6 @@ export async function performSearch(
     process.exit(1);
   }
 
-  spinner.text = "Generating query embedding...";
-  const embedder = indexer.getEmbedder();
-  const queryVector = await embedder.embed(pattern);
-
   spinner.text = "Searching...";
 
   let pathFilter: string | undefined;
@@ -87,12 +86,10 @@ export async function performSearch(
       : path.join(root, searchPath);
   }
 
-  const vectorStore = indexer.getVectorStore();
-  const results = await vectorStore.search(
-    queryVector,
-    options.maxCount,
+  const results = await indexer.search(pattern, {
+    limit: options.maxCount,
     pathFilter,
-  );
+  });
 
   spinner.stop();
 

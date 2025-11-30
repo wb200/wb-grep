@@ -1,5 +1,15 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
+import {
+  DEFAULT_BATCH_SIZE,
+  DEFAULT_CONCURRENCY,
+  DEFAULT_MAX_RESULTS,
+  DEFAULT_OLLAMA_MODEL,
+  DEFAULT_OLLAMA_RETRIES,
+  DEFAULT_OLLAMA_TIMEOUT,
+  DEFAULT_OLLAMA_URL,
+  MAX_FILE_SIZE,
+} from "./constants";
 
 export interface WbGrepConfig {
   ollama: {
@@ -22,18 +32,18 @@ export interface WbGrepConfig {
 
 const DEFAULT_CONFIG: WbGrepConfig = {
   ollama: {
-    baseURL: "http://localhost:11434",
-    model: "qwen3-embedding:0.6b",
-    timeout: 30000,
-    retries: 3,
+    baseURL: DEFAULT_OLLAMA_URL,
+    model: DEFAULT_OLLAMA_MODEL,
+    timeout: DEFAULT_OLLAMA_TIMEOUT,
+    retries: DEFAULT_OLLAMA_RETRIES,
   },
   indexing: {
-    batchSize: 10,
-    maxFileSize: 1024 * 1024, // 1MB
-    concurrency: 8,
+    batchSize: DEFAULT_BATCH_SIZE,
+    maxFileSize: MAX_FILE_SIZE,
+    concurrency: DEFAULT_CONCURRENCY,
   },
   search: {
-    maxResults: 10,
+    maxResults: DEFAULT_MAX_RESULTS,
     showContent: false,
   },
   ignore: [],
