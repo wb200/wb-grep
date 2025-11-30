@@ -6,6 +6,13 @@ wb-grep brings the power of semantic code search to your local machine without r
 
 ---
 
+> **Note**: wb-grep is a derivative work based on [mgrep](https://github.com/mixedbread-ai/mgrep) 
+> by [Mixedbread AI](https://mixedbread.com), licensed under Apache-2.0. This project replaces 
+> the cloud-based embedding and vector storage with local alternatives (Ollama + LanceDB) 
+> while preserving the core CLI design and architecture.
+
+---
+
 ## What is wb-grep?
 
 Traditional grep is an invaluable tool, but it requires you to know *exactly* what you're looking for. When exploring unfamiliar codebases, debugging complex issues, or trying to understand how features are implemented, you often need to search by *intent* rather than exact patterns.
@@ -58,7 +65,7 @@ The result is a search experience that understands what you mean, not just what 
 
 ```bash
 # Clone and install
-git clone https://github.com/yourusername/wb-grep.git
+git clone https://github.com/wb200/wb-grep.git
 cd wb-grep
 npm install
 npm run build
@@ -571,13 +578,27 @@ wb-grep/
 
 ## License
 
-MIT License. See [LICENSE](LICENSE) for details.
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+
+wb-grep is a derivative work of [mgrep](https://github.com/mixedbread-ai/mgrep) by Mixedbread AI,
+which is also licensed under Apache-2.0.
 
 ---
 
 ## Acknowledgments
 
-- [mgrep](https://github.com/mixedbread-ai/mgrep) by Mixedbread for inspiration
-- [Ollama](https://ollama.com) for making local LLM inference accessible
-- [LanceDB](https://lancedb.com) for the excellent embedded vector database
-- [Qwen](https://github.com/QwenLM/Qwen) for the embedding model
+### Original Work
+
+wb-grep is based on [mgrep](https://github.com/mixedbread-ai/mgrep) by [Mixedbread AI](https://mixedbread.com).
+The original mgrep provides cloud-based semantic code search using Mixedbread's embedding API.
+This derivative work adapts the core architecture for fully local operation.
+
+- **Original Project**: [mixedbread-ai/mgrep](https://github.com/mixedbread-ai/mgrep)
+- **Original License**: Apache-2.0
+- **Original Authors**: Mixedbread AI team
+
+### Other Dependencies
+
+- [Ollama](https://ollama.com) - Local LLM inference
+- [LanceDB](https://lancedb.com) - Embedded vector database
+- [Qwen](https://github.com/QwenLM/Qwen) - Embedding model
