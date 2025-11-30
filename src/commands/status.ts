@@ -4,14 +4,14 @@ import chalk from "chalk";
 import { Command } from "commander";
 import ora from "ora";
 import { loadConfig } from "../lib/config";
-import { VERBOSE_FILE_LIMIT } from "../lib/constants";
+import { VERBOSE_FILE_LIMIT, WB_GREP_DIR } from "../lib/constants";
 import { Indexer } from "../lib/indexer";
 
 export async function performStatus(options: {
   verbose: boolean;
 }): Promise<void> {
   const root = process.cwd();
-  const wbGrepDir = path.join(root, ".wb-grep");
+  const wbGrepDir = path.join(root, WB_GREP_DIR);
 
   console.log(chalk.blue("\n📊 wb-grep Status\n"));
 

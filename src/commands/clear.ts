@@ -4,11 +4,12 @@ import chalk from "chalk";
 import { Command } from "commander";
 import ora from "ora";
 import { loadConfig } from "../lib/config";
+import { WB_GREP_DIR } from "../lib/constants";
 import { Indexer } from "../lib/indexer";
 
 export async function performClear(options: { force: boolean }): Promise<void> {
   const root = process.cwd();
-  const wbGrepDir = path.join(root, ".wb-grep");
+  const wbGrepDir = path.join(root, WB_GREP_DIR);
 
   if (!fs.existsSync(wbGrepDir)) {
     console.log(chalk.yellow("\nNo index found in this directory.\n"));

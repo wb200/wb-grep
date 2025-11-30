@@ -1,5 +1,10 @@
 import * as crypto from "node:crypto";
 import * as path from "node:path";
+import {
+  DEFAULT_MAX_CHUNK_LINES,
+  DEFAULT_MIN_CHUNK_LINES,
+  DEFAULT_OVERLAP_LINES,
+} from "./constants";
 
 export interface CodeChunk {
   content: string;
@@ -14,9 +19,9 @@ export interface ChunkConfig {
 }
 
 const DEFAULT_CONFIG: ChunkConfig = {
-  maxChunkLines: 150,
-  overlapLines: 5,
-  minChunkLines: 5,
+  maxChunkLines: DEFAULT_MAX_CHUNK_LINES,
+  overlapLines: DEFAULT_OVERLAP_LINES,
+  minChunkLines: DEFAULT_MIN_CHUNK_LINES,
 };
 
 const FUNCTION_PATTERNS: Record<string, RegExp[]> = {

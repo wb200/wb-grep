@@ -5,12 +5,12 @@ import chokidar from "chokidar";
 import { Command } from "commander";
 import ora from "ora";
 import { loadConfig } from "../lib/config";
-import { WATCH_DEBOUNCE_MS } from "../lib/constants";
+import { WATCH_DEBOUNCE_MS, WB_GREP_DIR } from "../lib/constants";
 import { Indexer } from "../lib/indexer";
 
 export async function startWatch(options: { dryRun: boolean }): Promise<void> {
   const root = process.cwd();
-  const wbGrepDir = path.join(root, ".wb-grep");
+  const wbGrepDir = path.join(root, WB_GREP_DIR);
 
   console.log(chalk.blue("\n🚀 Starting wb-grep watch...\n"));
 

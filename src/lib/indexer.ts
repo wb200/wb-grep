@@ -3,7 +3,7 @@ import * as path from "node:path";
 import { v4 as uuidv4 } from "uuid";
 import { CodeChunker } from "./chunker";
 import type { WbGrepConfig } from "./config";
-import { BINARY_SAMPLE_SIZE, MAX_FILE_SIZE } from "./constants";
+import { BINARY_SAMPLE_SIZE, MAX_FILE_SIZE, WB_GREP_DIR } from "./constants";
 import { OllamaEmbedder } from "./embeddings";
 import { FileSystem } from "./file";
 import { IndexStateManager } from "./index-state";
@@ -60,7 +60,7 @@ export class Indexer {
       retries: this.config.ollama.retries,
     });
 
-    const wbGrepDir = path.join(this.root, ".wb-grep");
+    const wbGrepDir = path.join(this.root, WB_GREP_DIR);
     this.vectorStore = new LanceDBStore(path.join(wbGrepDir, "vectors"));
     this.stateManager = new IndexStateManager(
       path.join(wbGrepDir, "state.json"),

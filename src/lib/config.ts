@@ -93,6 +93,14 @@ function loadConfigFile(filepath: string): Partial<WbGrepConfig> {
   }
 }
 
+function parseIntEnv(value: string, name: string): number {
+  const parsed = Number.parseInt(value, 10);
+  if (Number.isNaN(parsed)) {
+    throw new Error(`Invalid ${name}: "${value}" is not a valid number`);
+  }
+  return parsed;
+}
+
 function applyEnvOverrides(config: WbGrepConfig): WbGrepConfig {
   const result = { ...config };
 
@@ -111,19 +119,25 @@ function applyEnvOverrides(config: WbGrepConfig): WbGrepConfig {
   if (process.env.WBGREP_OLLAMA_TIMEOUT) {
     result.ollama = {
       ...result.ollama,
-      timeout: Number.parseInt(process.env.WBGREP_OLLAMA_TIMEOUT, 10),
+      timeout: parseIntEnv(
+        process.env.WBGREP_OLLAMA_TIMEOUT,
+        "WBGREP_OLLAMA_TIMEOUT",
+      ),
     };
   }
   if (process.env.WBGREP_OLLAMA_RETRIES) {
     result.ollama = {
       ...result.ollama,
-      retries: Number.parseInt(process.env.WBGREP_OLLAMA_RETRIES, 10),
+      retries: parseIntEnv(
+        process.env.WBGREP_OLLAMA_RETRIES,
+        "WBGREP_OLLAMA_RETRIES",
+      ),
     };
   }
   if (process.env.WBGREP_MAX_COUNT) {
     result.search = {
       ...result.search,
-      maxResults: Number.parseInt(process.env.WBGREP_MAX_COUNT, 10),
+      maxResults: parseIntEnv(process.env.WBGREP_MAX_COUNT, "WBGREP_MAX_COUNT"),
     };
   }
   if (process.env.WBGREP_CONTENT) {
@@ -135,13 +149,19 @@ function applyEnvOverrides(config: WbGrepConfig): WbGrepConfig {
   if (process.env.WBGREP_BATCH_SIZE) {
     result.indexing = {
       ...result.indexing,
-      batchSize: Number.parseInt(process.env.WBGREP_BATCH_SIZE, 10),
+      batchSize: parseIntEnv(
+        process.env.WBGREP_BATCH_SIZE,
+        "WBGREP_BATCH_SIZE",
+      ),
     };
   }
   if (process.env.WBGREP_CONCURRENCY) {
     result.indexing = {
       ...result.indexing,
-      concurrency: Number.parseInt(process.env.WBGREP_CONCURRENCY, 10),
+      concurrency: parseIntEnv(
+        process.env.WBGREP_CONCURRENCY,
+        "WBGREP_CONCURRENCY",
+      ),
     };
   }
 

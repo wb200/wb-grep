@@ -79,11 +79,6 @@ export class LanceDBStore {
     await this.table.add(records);
   }
 
-  async deleteByFilepath(filepath: string): Promise<void> {
-    if (!this.table) return;
-    await this.table.delete(`filepath = '${filepath.replace(/'/g, "''")}'`);
-  }
-
   async deleteByIds(ids: string[]): Promise<void> {
     if (!this.table || ids.length === 0) return;
     const idList = ids.map((id) => `'${id.replace(/'/g, "''")}'`).join(",");
@@ -133,16 +128,6 @@ export class LanceDBStore {
     }));
   }
 
-  async getChunksByFilepath(filepath: string): Promise<ChunkRecord[]> {
-    if (!this.table) return [];
-    const escapedPath = filepath.replace(/'/g, "''");
-    const results = await this.table
-      .query()
-      .where(`filepath = '${escapedPath}'`)
-      .toArray();
-    return results as ChunkRecord[];
-  }
-
   async count(): Promise<number> {
     if (!this.table) return 0;
     return await this.table.countRows();
@@ -167,10 +152,5 @@ export class LanceDBStore {
   async clear(): Promise<void> {
     if (!this.table) return;
     await this.table.delete("id IS NOT NULL");
-  }
-
-  async close(): Promise<void> {
-    this.table = null;
-    this.db = null;
   }
 }

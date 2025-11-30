@@ -566,8 +566,8 @@ wb-grep/
 │       ├── index-state.ts    # State management
 │       ├── file.ts           # File system utilities
 │       ├── config.ts         # Configuration loading
-│       ├── logger.ts         # Logging utilities
-│       └── context.ts        # Dependency injection
+│       ├── constants.ts      # Shared constants
+│       └── logger.ts         # Logging utilities
 ├── dist/                     # Compiled output
 ├── package.json
 ├── tsconfig.json
