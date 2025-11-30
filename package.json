@@ -1,0 +1,54 @@
+{
+  "name": "wb-grep",
+  "version": "0.1.0",
+  "description": "A local semantic grep tool using Qwen3 embeddings via Ollama and LanceDB",
+  "author": "wb200",
+  "license": "Apache-2.0",
+  "main": "dist/index.js",
+  "bin": {
+    "wb-grep": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "postbuild": "chmod +x dist/index.js",
+    "dev": "tsc && node dist/index.js",
+    "format": "biome check --write .",
+    "format:check": "biome check .",
+    "lint": "biome lint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "semantic-search",
+    "grep",
+    "embeddings",
+    "ollama",
+    "lancedb",
+    "qwen3",
+    "code-search"
+  ],
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@lancedb/lancedb": "^0.13.0",
+    "apache-arrow": "^17.0.0",
+    "chalk": "^5.3.0",
+    "chokidar": "^3.6.0",
+    "commander": "^12.1.0",
+    "ignore": "^5.3.2",
+    "istextorbinary": "^9.5.0",
+    "ora": "^8.1.1",
+    "p-limit": "^6.1.0",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/node": "^22.9.0",
+    "@types/uuid": "^10.0.0",
+    "typescript": "^5.6.3"
+  }
+}
