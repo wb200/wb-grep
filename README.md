@@ -1,8 +1,15 @@
 # wb-grep
 
+[![npm version](https://img.shields.io/npm/v/wb-grep.svg)](https://www.npmjs.com/package/wb-grep)
+[![npm downloads](https://img.shields.io/npm/dm/wb-grep.svg)](https://www.npmjs.com/package/wb-grep)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![GitHub Stars](https://img.shields.io/github/stars/wb200/wb-grep?style=social)](https://github.com/wb200/wb-grep)
+
 **A fully local semantic grep tool for code search using Qwen3 embeddings via Ollama and LanceDB.**
 
 wb-grep brings the power of semantic code search to your local machine without requiring any cloud services or API keys. Search your codebase using natural language queries, find related code by meaning rather than exact text matches, and keep your code indexed automatically as you work.
+
+**Install now**: `npm install -g wb-grep`
 
 ---
 
@@ -63,13 +70,26 @@ The result is a search experience that understands what you mean, not just what 
 
 ### Installation
 
+**Recommended: Install from NPM (one-liner)**
+
 ```bash
-# Clone and install
+npm install -g wb-grep
+```
+
+**Alternative: Install from source (for development)**
+
+```bash
 git clone https://github.com/wb200/wb-grep.git
 cd wb-grep
 npm install
 npm run build
 npm link  # Makes 'wb-grep' available globally
+```
+
+**Verify installation:**
+
+```bash
+wb-grep --version
 ```
 
 ### Setup Ollama
@@ -81,11 +101,17 @@ brew install ollama
 # Or on Linux
 curl -fsSL https://ollama.com/install.sh | sh
 
-# Start the Ollama server
+# Start the Ollama server (keep running in background)
 ollama serve
 
-# Pull the embedding model (in another terminal)
+# Pull the embedding model (in another terminal, one-time setup)
 ollama pull qwen3-embedding:0.6b
+```
+
+**Verify Ollama is running:**
+
+```bash
+curl http://localhost:11434/api/tags
 ```
 
 ### Your First Search
@@ -623,7 +649,26 @@ Choose **wb-grep** if you need fully local operation, data privacy, or want to a
 
 ---
 
-## Development
+## Contributing & Development
+
+### For Users
+
+**Install from npm:**
+
+```bash
+npm install -g wb-grep
+```
+
+**Or clone from source:**
+
+```bash
+git clone https://github.com/wb200/wb-grep.git
+cd wb-grep
+npm install
+npm link
+```
+
+### For Developers
 
 ```bash
 # Install dependencies
@@ -641,6 +686,22 @@ npm run format
 
 # Type check
 npm run typecheck
+
+# Run tests (if configured)
+npm test
+```
+
+### Publishing Updates
+
+```bash
+# Update version
+npm version patch  # or minor/major
+
+# Publish to npm
+npm publish
+
+# Push tags to GitHub
+git push origin --tags
 ```
 
 ### Project Structure
