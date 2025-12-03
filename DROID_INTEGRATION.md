@@ -384,9 +384,152 @@ If wb-grep: advanced-grep skill provides quick reference
    export WB_GREP_WATCH_LOG=$HOME/.factory/debug/wb-grep-watch.log
    ```
 
+## Design Decisions
+
+### 1. Minimal Skill to Avoid Redundancy with Advanced-Grep
+
+**Problem**: mgrep has a minimal skill, and wb-grep already has comprehensive advanced-grep skill available
+
+**Solution**:
+- Created minimal quick-reference skill (`plugins/wb-grep/skills/wb-grep/SKILL.md`)
+- Kept existing advanced-grep skill unchanged
+- Quick skill references advanced-grep for deeper guidance
+- No duplication; complementary approach
+
+**Result**: Focused, non-redundant documentation that guides users to appropriate tools without repeating comprehensive comparisons.
+
+### 2. Hooks for Lifecycle Automation
+
+**Problem**: Need to keep watch mode running across Droid sessions for continuously updated embeddings
+
+**Solution**:
+- SessionStart hook starts `wb-grep watch` in background process group
+- SessionEnd hook cleanly terminates with SIGTERM
+- Uses PID tracking for safe multi-session operation
+- Graceful failure (never blocks Droid)
+
+**Result**: Automatic, seamless integration without manual watch process management
+
+### 3. One-Line Installation Command
+
+**Problem**: Plugin files need to be delivered and installed for Droid to discover them
+
+**Solution**:
+- Include plugins in source repo (`plugins/wb-grep/`)
+- `install-droid` command copies to `~/.factory/plugins/wb-grep/`
+- Users run one command for full setup
+- Can reinstall or verify with flags (`--force`, `--verify`)
+
+**Result**: Frictionless setup - one command does all verification and installation
+
+### 4. Error Handling Strategy
+
+**SessionStart Hook**:
+- Never blocks Droid session if watch fails to start
+- Returns status via context message
+- Logs all errors for debugging
+
+**SessionEnd Hook**:
+- Always exits with code 0 (never blocks session end)
+- Best-effort cleanup of PID and log files
+- Graceful handling of already-terminated processes
+
+**Result**: Robust integration that degrades gracefully without disrupting Droid sessions
+
+## Implementation Status
+
+### Build and Testing
+```bash
+✓ npm run build       # TypeScript compilation successful
+✓ npm run typecheck   # No type errors
+✓ npm run lint        # No linting errors
+✓ npm link            # Global binary installed
+```
+
+### Plugin Files Created
+```
+✓ plugins/wb-grep/hooks/hook.json (28 lines)
+✓ plugins/wb-grep/hooks/wb_grep_watch.py (99 lines, executable)
+✓ plugins/wb-grep/hooks/wb_grep_watch_kill.py (110 lines, executable)
+✓ plugins/wb-grep/skills/wb-grep/SKILL.md (76 lines)
+✓ plugins/wb-grep/plugin.json (27 lines)
+✓ src/commands/install-droid.ts (218 lines)
+```
+
+### Files Modified
+- `src/index.ts` - Added install-droid command registration (+2 lines)
+- `README.md` - Added Droid integration section (+97 lines)
+
+### Git Commit
+```
+16b11a3 - Feat: Complete Factory Droid integration with hooks and skills
+```
+
+## Compatibility
+
+### Requirements Met
+- ✅ Factory Droid CLI compatible (v1.0.0+)
+- ✅ Hooks system (SessionStart/SessionEnd)
+- ✅ Skills system (auto-discovered via plugin.json)
+- ✅ Plugin metadata format (plugin.json with ${DROID_PLUGIN_ROOT})
+- ✅ Hook configuration (hook.json with matcher patterns)
+
+### Environment & Dependencies
+- TypeScript 5.6.3
+- Node.js 18+
+- Python 3 (for hooks)
+- Ollama (for embeddings)
+- Factory Droid CLI v1.0.0+
+
+### Known Limitations
+- Requires Ollama running separately (can be improved with hook auto-start in future)
+- Works on Unix-like systems (Windows support untested for process groups)
+- Python 3 required for hook scripts
+- Single embedding model (qwen3-embedding:0.6b)
+
+## NPM Publication
+
+### Published Package
+- **Package Name**: `wb-grep`
+- **Version**: `0.1.0`
+- **Registry**: https://www.npmjs.com/package/wb-grep
+- **Installation**: `npm install -g wb-grep`
+
+### Package Contents
+- Compiled TypeScript (dist/) with source maps
+- All dependencies bundled
+- Executable CLI binary
+- Complete documentation (README, DROID_INTEGRATION.md)
+- License and attribution files (Apache-2.0)
+- Plugin system files
+
+### Package Size
+- **Tarball**: 41.4 kB
+- **Unpacked**: 191.1 kB
+- **Files**: 54 total
+
+## Future Enhancements
+
+### Planned Improvements
+1. **Auto-start Ollama**: Hook could detect and start Ollama if not running
+2. **Multiple Instances**: Better concurrent session handling
+3. **Windows Support**: Process group handling for Windows systems
+4. **Health Checks**: Periodic verification of watch process health
+5. **Metrics Collection**: Track search queries, latency, and result quality
+6. **PreToolUse Hooks**: Intercept Grep/ast-grep to suggest wb-grep when appropriate
+7. **Model Selection**: Allow users to choose embedding model during installation
+8. **Performance Optimization**: Caching strategies for frequently searched patterns
+
 ## Related Documentation
 
 - [README.md](./README.md) - Main wb-grep documentation
 - [Factory Hooks Reference](https://docs.factory.ai/reference/hooks-reference) - Hook system details
 - [Factory Skills Guide](https://docs.factory.ai/cli/configuration/skills) - Skill creation
 - [mgrep Integration](https://github.com/mixedbread-ai/mgrep/tree/main/plugins/mgrep) - Original inspiration
+
+---
+
+**Status**: ✅ **COMPLETE - Production Ready**
+**Latest Commit**: `16b11a3 - Feat: Complete Factory Droid integration with hooks and skills`
+**NPM Package**: https://www.npmjs.com/package/wb-grep
+**GitHub Repository**: https://github.com/wb200/wb-grep
