@@ -1,0 +1,28 @@
+{
+  "description": "wb-grep Droid integration hooks for semantic code search",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ${DROID_PLUGIN_ROOT}/hooks/wb_grep_watch.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ${DROID_PLUGIN_ROOT}/hooks/wb_grep_watch_kill.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

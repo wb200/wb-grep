@@ -1,0 +1,27 @@
+{
+  "id": "wb-grep",
+  "name": "wb-grep",
+  "version": "0.1.0",
+  "description": "Local semantic code search via Ollama and LanceDB. Provides hooks for automatic watch mode management and skills for optimal search strategy.",
+  "author": "wb200",
+  "license": "Apache-2.0",
+  "hooks": "./hooks/hook.json",
+  "skills": [
+    "./skills/wb-grep/SKILL.md"
+  ],
+  "keywords": [
+    "search",
+    "semantic",
+    "code",
+    "grep",
+    "local",
+    "ollama",
+    "embeddings"
+  ],
+  "repository": "https://github.com/wb200/wb-grep",
+  "requirements": {
+    "droid": ">=1.0.0",
+    "ollama": "running",
+    "wb-grep": "installed globally"
+  }
+}

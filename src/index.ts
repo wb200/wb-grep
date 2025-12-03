@@ -7,6 +7,7 @@ import { indexCmd } from "./commands/index-cmd";
 import { search } from "./commands/search";
 import { status } from "./commands/status";
 import { watch } from "./commands/watch";
+import { installDroid } from "./commands/install-droid";
 
 const packageJson = JSON.parse(
   fs.readFileSync(path.join(__dirname, "../package.json"), {
@@ -26,5 +27,6 @@ program.addCommand(watch);
 program.addCommand(indexCmd);
 program.addCommand(status);
 program.addCommand(clear);
+program.addCommand(installDroid);
 
 program.parse();

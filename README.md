@@ -105,6 +105,103 @@ wb-grep "error handling patterns"
 
 ---
 
+## Factory Droid Integration
+
+wb-grep integrates seamlessly with [Factory Droid](https://factory.ai) to provide semantic code search capabilities within your AI coding workflows.
+
+### Setup with Droid
+
+```bash
+# Run the install command to set up wb-grep for Droid
+wb-grep install-droid
+```
+
+This command:
+- Verifies Ollama connectivity and embedding model availability
+- Checks if your repository is indexed
+- Installs wb-grep as a Droid plugin with hooks and skills
+- Enables automatic watch mode when Droid sessions start
+
+### How It Works with Droid
+
+Once installed, wb-grep integrates with Droid via:
+
+1. **Hooks** - Automatically starts/stops `wb-grep watch` at session boundaries:
+   - **SessionStart**: Initializes `wb-grep watch` in background
+   - **SessionEnd**: Cleanly terminates the watch process
+
+2. **Skills** - Two complementary capabilities:
+   - **wb-grep skill**: Quick reference for using semantic search
+   - **advanced-grep skill**: Comprehensive decision framework for choosing the right search tool (wb-grep, Grep, or ast-grep)
+
+### Usage in Droid
+
+Within a Droid session, you can leverage semantic search in several ways:
+
+```bash
+# Droid can invoke wb-grep directly
+droid> Search for the authentication middleware
+
+# Or use the advanced-grep skill for optimal search strategy
+droid> Where should I look for rate limiting?
+# → advanced-grep skill recommends: wb-grep "rate limiting implementation"
+
+# Or run semantic queries via Execute tool
+droid> /exec wb-grep "session management"
+```
+
+### Plugin Structure
+
+```
+~/.factory/plugins/wb-grep/
+├── hooks/
+│   ├── hook.json                    # Hook configuration
+│   ├── wb_grep_watch.py             # Start watch process
+│   └── wb_grep_watch_kill.py        # Clean shutdown
+├── skills/
+│   └── wb-grep/
+│       └── SKILL.md                 # Quick reference skill
+└── plugin.json                      # Plugin metadata
+```
+
+### Requirements for Droid Integration
+
+- wb-grep binary installed globally (via `npm link`)
+- Ollama running and accessible at `http://localhost:11434`
+- Embedding model available: `qwen3-embedding:0.6b`
+- Factory Droid CLI installed
+
+### Troubleshooting Droid Integration
+
+**"Plugin not found"**
+```bash
+# Verify installation
+wb-grep install-droid --verify
+
+# Reinstall if needed
+wb-grep install-droid --force
+```
+
+**"Hooks failing"**
+```bash
+# Check hook logs
+cat ~/.factory/hooks/debug.log | grep wb-grep
+
+# Verify Ollama connectivity
+curl http://localhost:11434/api/tags
+```
+
+**"Watch mode not starting"**
+```bash
+# Test hook manually
+python3 ~/.factory/plugins/wb-grep/hooks/wb_grep_watch.py
+
+# Check if already running
+pgrep -f "wb-grep watch"
+```
+
+---
+
 ## Commands
 
 ### `wb-grep search <pattern> [path]` (default)
